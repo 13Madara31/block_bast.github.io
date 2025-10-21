@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/main.css"> <!-- Проверь путь к файлу -->
+    <title>Block Bast Hard</title>
+</head>
+<body>
+    <div class="game_container">
+        <div class="score">Очки: <span id="score">0</span></div>
+        <button id="settings-btn" class="btn-settings-icon"><img src="https://picsum.photos/30/30" alt="Settings"></button>
+        <canvas id="game-canvas" width="400" height="400"></canvas>
+        <div class="draggable-blocks-wrapper"> <!-- Новый контейнер для блоков -->
+            <div class="block_container">
+                <div class="block" id="block1" draggable="true"></div>
+                <div class="block" id="block2" draggable="true"></div>
+                <div class="block" id="block3" draggable="true"></div>
+            </div>
+        </div>
+        <button id="restart-btn" class="hidden">Рестарт</button> <!-- Кнопка рестарта скрыта по умолчанию -->
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal-overlay">
+        <div class="modal-content">
+            <h2 class="modal-title">Настройки</h2>
+            <button class="btn-close-settings-modal">&times;</button>
+            <div class="settings-option">
+                <span>Музыка:</span>
+                <label class="switch">
+                    <input type="checkbox" id="musicToggle" checked>
+                    <span class="slider round"></span>
+                </label>
+            </div>
+            <div class="settings-option">
+                <span>Звуки:</span>
+                <label class="switch">
+                    <input type="checkbox" id="soundToggle" checked>
+                    <span class="slider round"></span>
+                </label>
+            </div>
+            <button id="restart-game-from-settings" class="btn-reload">Рестарт Игры</button>
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>

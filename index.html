@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Block Blast Game</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/modal.css">
+</head>
+<body>
+    <main class="container fade-in">
+        <h1 class="game-title">💥 Block Blast</h1>
+        <p class="game-subtitle">Собирай блоки, ставь рекорды! 🎯</p>
+        
+        <div class="buttons-container">
+            <button class="btn btn-play" onclick="startGame()">
+                🎮 Играть
+            </button>
+            <button class="btn btn-ranking" onclick="showRanking()">
+                🏆 Рейтинг
+            </button>
+            <button class="btn btn-shop" onclick="showShop()">
+                🛒 Магазин
+            </button>
+        </div>
+        
+        <div class="high-score">
+            <div>🏆 Мой рекорд</div>
+            <div class="score-number" id="highScore">0</div>
+        </div>
+
+        <div class="selected-role-display">
+            <div>Ваша роль:</div>
+            <div id="currentRole" class="role-name">Не выбрана</div>
+        </div>
+    </main>
+
+    <!-- Modal Window for Character Selection -->
+    <div id="characterSelectModal" class="modal-overlay">
+        <div class="modal-content">
+            <h2 class="modal-title">Выберите своего героя</h2>
+            <div class="character-cards-container">
+                <div class="character-card" data-character="архимаг">
+                    <img src="Orange Girl Wallpaper 🔸.jpg" alt="Архимаг">
+                    <h3>Архимаг</h3>
+                </div>
+                <div class="character-card" data-character="провидец">
+                    <img src="загруженное (3).jpg" alt="Провидец">
+                    <h3>Провидец</h3>
+                </div>
+                <div class="character-card" data-character="инженер">
+                    <img src="загруженное (2).jpg" alt="Инженер">
+                    <h3>Инженер</h3>
+                </div>
+                <div class="character-card secret-card" data-character="монархтеней" style="display: none;">
+                    <img src="загруженное (1).jpg" alt="Монарх Теней">
+                    <h3>Монарх Теней</h3>
+                </div>
+            </div>
+            <div class="character-description-area">
+                <p id="characterDescription">Нажмите на карточку, чтобы узнать больше.</p>
+            </div>
+            <button id="selectCharacterBtn" class="btn btn-modal-select" disabled>Выбрать</button>
+            <button id="settingsBtn" class="btn-settings-icon">
+                ⚙️
+            </button>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal-overlay">
+        <div class="modal-content">
+            <h2 class="modal-title">Настройки</h2>
+            <div class="settings-option">
+                <span>Музыка</span>
+                <label class="switch">
+                    <input type="checkbox" id="musicToggle" checked>
+                    <span class="slider round"></span>
+                </label>
+            </div>
+            <div class="settings-option">
+                <span>Звуки</span>
+                <label class="switch">
+                    <input type="checkbox" id="soundToggle" checked>
+                    <span class="slider round"></span>
+                </label>
+            </div>
+            <button id="reloadBtn" class="btn btn-reload">Перезагрузить</button>
+            <button class="btn-close-settings-modal">✖</button>
+        </div>
+    </div>
+
+    <!-- Ranking Modal -->
+    <div id="rankingModal" class="modal-overlay">
+        <div class="modal-content">
+            <h2 class="modal-title">🏆 Рейтинг</h2>
+            <div id="rankingList" class="ranking-list"></div>
+            <button class="btn-close-ranking-modal">✖</button>
+        </div>
+    </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Загружаем рекорд из localStorage и убеждаемся, что это число
+        let highScore = parseInt(localStorage.getItem('blockBlastHighScore'), 10);
+        if (isNaN(highScore) || highScore < 0) {
+            highScore = 0;
+            localStorage.setItem('blockBlastHighScore', 0); // Очищаем некорректное значение
+        }
+        
+        // Обновляем отображение рекорда
+        document.getElementById('highScore').textContent = formatNumber(highScore);
+        
+        // JavaScript для модального окна выбора персонажа
+        const characterSelectModal = document.getElementById('characterSelectModal');
+        const characterCards = document.querySelectorAll('.character-card');
+        const characterDescription = document.getElementById('characterDescription');
+        const selectCharacterBtn = document.getElementById('selectCharacterBtn');
+        const settingsBtn = document.getElementById('settingsBtn');
+        const settingsModal = document.getElementById('settingsModal');
+        const closeSettingsModalBtn = document.querySelector('.btn-close-settings-modal');
+        const musicToggle = document.getElementById('musicToggle');
+        const soundToggle = document.getElementById('soundToggle');
+        const reloadBtn = document.getElementById('reloadBtn');
+        const currentRoleDisplay = document.getElementById('currentRole'); // Новый элемент для отображения роли
+        
+        let selectedCharacter = null;
+        let reloadCount = 0; // Для секретной карточки
+
+        const characterDescriptions = {
+            архимаг: '🔥 Магическая Очистка - убирает 2 любые линии (1 раз за игру)\n🔮 Призыв Нужного Блока - выбирает идеальную фигуру (1 раз за игру)',
+            провидец: '🎲 Фортуна Перезагрузки - полностью очищает поле (1 раз за игру)',
+            инженер: '🔧 Перепланировка Стройки - перемещает/удаляет любой стоящий блок (каждые 5 ходов)',
+            монархтеней: '🌑 Теневая Буря - полная очистка поля (1 раз)\n💀 Возвращение из Теней - автоматическое воскрешение при проигрыше (1 раз)\n🕳️ Теневые Блоки - заполняют любые пустоты (3 раза)\n🕳️ Теневые Блоки - заполняют любые пустоты (3 раза)' /* Обновленное описание для монарха теней */
+        };
+
+        function updateRoleDisplay() {
+            const savedRole = localStorage.getItem('selectedCharacterRole');
+            const roleDisplayElement = document.querySelector('.selected-role-display');
+
+            // Удаляем все предыдущие классы ролей
+            roleDisplayElement.classList.forEach(cls => {
+                if (cls.startsWith('role-')) {
+                    roleDisplayElement.classList.remove(cls);
+                }
+            });
+
+            if (savedRole) {
+                currentRoleDisplay.textContent = savedRole.charAt(0).toUpperCase() + savedRole.slice(1); // Отображаем само имя роли
+                roleDisplayElement.classList.add(`role-${savedRole.toLowerCase()}`);
+            } else {
+                currentRoleDisplay.textContent = 'Не выбрана';
+                // Здесь можно добавить класс для состояния 'Не выбрана', если необходимо
+            }
+        }
+
+        function checkAndShowCharacterSelection() {
+            const savedRole = localStorage.getItem('selectedCharacterRole');
+            const roleDisplayElement = document.querySelector('.selected-role-display');
+
+            if (!savedRole) {
+                characterSelectModal.classList.add('active');
+            } else {
+                console.log('Роль уже выбрана: ' + savedRole);
+                roleDisplayElement.classList.add(`role-${savedRole.toLowerCase()}`); // Применяем класс, если роль уже выбрана
+                if (savedRole === 'монархтеней') {
+                    const secretCardElement = document.querySelector('[data-character="монархтеней"]');
+                    if (secretCardElement) {
+                        secretCardElement.style.display = 'flex';
+                    }
+                }
+            }
+        }
+
+        // Открытие/закрытие модального окна настроек
+        settingsBtn.addEventListener('click', () => {
+            settingsModal.classList.add('active');
+        });
+
+        closeSettingsModalBtn.addEventListener('click', () => {
+            settingsModal.classList.remove('active');
+        });
+
+        // Обработчик кнопки "Перезагрузить" для секретной карточки
+        reloadBtn.addEventListener('click', () => {
+            reloadCount++;
+            console.log('Reloads: ' + reloadCount);
+            if (reloadCount >= 3) {
+                const secretCardElement = document.querySelector('[data-character="монархтеней"]');
+                if (secretCardElement) {
+                    secretCardElement.style.display = 'flex'; // Показываем секретную карточку
+                }
+                alert('🎉 Секретная карточка \'Монарх Теней\' разблокирована!');
+                // Сбрасываем счетчик, чтобы не открывать постоянно
+                reloadCount = 0;
+                // Закрываем модальное окно настроек
+                settingsModal.classList.remove('active');
+            }
+        });
+
+        // Логика переключателей музыки и звуков
+        musicToggle.checked = JSON.parse(localStorage.getItem('musicEnabled') || 'true');
+        soundToggle.checked = JSON.parse(localStorage.getItem('soundEnabled') || 'true');
+
+        musicToggle.addEventListener('change', () => {
+            localStorage.setItem('musicEnabled', musicToggle.checked);
+            console.log('Музыка: ' + (musicToggle.checked ? 'Включена' : 'Выключена'));
+        });
+
+        soundToggle.addEventListener('change', () => {
+            localStorage.setItem('soundEnabled', soundToggle.checked);
+            console.log('Звуки: ' + (soundToggle.checked ? 'Включены' : 'Выключены'));
+        });
+
+        characterCards.forEach(card => {
+            card.addEventListener('click', () => {
+                characterCards.forEach(c => c.classList.remove('selected'));
+                card.classList.add('selected');
+                selectedCharacter = card.dataset.character;
+                characterDescription.textContent = characterDescriptions[selectedCharacter];
+                selectCharacterBtn.disabled = false;
+            });
+        });
+
+        selectCharacterBtn.addEventListener('click', () => {
+            if (selectedCharacter) {
+                localStorage.setItem('selectedCharacterRole', selectedCharacter);
+                characterSelectModal.classList.remove('active');
+                updateRoleDisplay(); // Обновляем отображение роли после выбора
+                alert(`Вы выбрали: ${selectedCharacter.charAt(0).toUpperCase() + selectedCharacter.slice(1)}!`);
+            }
+        });
+
+        updateRoleDisplay(); // Обновляем отображение роли при загрузке страницы
+        checkAndShowCharacterSelection(); // Вызываем функцию для модального окна
+
+        // JavaScript для модального окна рейтинга
+        const rankingModal = document.getElementById('rankingModal');
+        const rankingList = document.getElementById('rankingList');
+        const closeRankingModalBtn = document.querySelector('.btn-close-ranking-modal');
+
+        function showRanking() {
+            rankingModal.classList.add('active');
+            const ranking = JSON.parse(localStorage.getItem('blockBlastRanking') || '[]');
+            
+            let rankingText = '🏆 Топ игроков:\n\n';
+            
+            if (ranking.length === 0) {
+                rankingText += 'Пока нет результатов!\nБудь первым! 🚀';
+            } else {
+                ranking.slice(0, 5).forEach((player, index) => {
+                    const medals = ['🥇', '🥈', '🥉', '4️⃣', '5️⃣'];
+                    rankingText += `${medals[index] || '•'} ${player.name}: ${formatNumber(player.score)} очков\n`;
+                });
+            }
+            
+            rankingText += '\n🎯 Твой рекорд: ' + formatNumber(highScore) + ' очков';
+            
+            rankingList.innerHTML = rankingText;
+        }
+        
+        closeRankingModalBtn.addEventListener('click', () => {
+            rankingModal.classList.remove('active');
+        });
+    });
+
+    // Функция для форматирования чисел (24313 -> 24,313)
+    function formatNumber(num) {
+        if (typeof num !== 'number' || isNaN(num)) {
+            return '0'; // Возвращаем '0', если входные данные некорректны
+        }
+        return num.toLocaleString('ru-RU');
+    }
+    
+    // Функция начала игры
+    function startGame() {
+        // alert('🎮 Игра начинается!\n\nСобирай группы одинаковых блоков и ставь новые рекорды! 🚀');
+        // Здесь будет переход к самой игре
+        window.location.href = 'game.html'; // если игра в отдельном файле
+        // Для демонстрации - симуляция игры
+        // simulateGame();
+    }
+</script>
+</body>
+</html>
