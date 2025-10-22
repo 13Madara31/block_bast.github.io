@@ -1,0 +1,852 @@
+    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+/* Existing styles from index.html */
+
+:root {
+    --dark-purple: #2a003a;
+    --deep-purple: #4e005d;
+    --neon-purple: #bc00dd;
+    --dark-red: #6a0000;
+    --deep-red: #8d0000;
+    --neon-red: #ff005d;
+    --accent-yellow: #fdd835;
+    --text-light: #e0e0e0;
+    --text-dark: #a0a0a0;
+    --shadow-dark: rgba(0, 0, 0, 0.7);
+    --shadow-light: rgba(255, 0, 93, 0.3);
+
+    /* Архимаг Colors (Current Theme - Neon Purple/Red) */
+    --архимаг-bg-dark: var(--deep-purple);
+    --архимаг-border: var(--neon-purple);
+    --архимаг-shadow: var(--neon-purple);
+    --архимаг-text: var(--accent-yellow);
+
+    /* Провидец Colors (Blue/Green) */
+    --провидец-bg-dark: #1a3a3a;
+    --провидец-border: #00ffcc;
+    --провидец-shadow: #00ffcc;
+    --провидец-text: #99ffeb;
+
+    /* Инженер Colors (Grey/Yellow/Orange) */
+    --инженер-bg-dark: #3a3a3a;
+    --инженер-border: #ffcc00;
+    --инженер-shadow: #ffcc00;
+    --инженер-text: #ffee99;
+
+    /* Монарх Теней Colors (Dark/Shadow) */
+    --монархтеней-bg-dark: #1a1a1a;
+    --монархтеней-border: #4a004a;
+    --монархтеней-shadow: #6a006a;
+    --монархтеней-text: #c0c0c0;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Press Start 2P', cursive, Arial, sans-serif; /* Добавление ретро-шрифта */
+    background: var(--dark-purple);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    color: var(--text-light);
+    overflow: hidden;
+    position: relative;
+}
+
+/* Retro grid background */
+body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        linear-gradient(to right, rgba(255, 0, 93, 0.1) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 0, 93, 0.1) 1px, transparent 1px);
+    background-size: 30px 30px;
+    animation: panBackground 60s linear infinite;
+    z-index: -1;
+    opacity: 0.3;
+}
+
+@keyframes panBackground {
+    0% { background-position: 0% 0%; }
+    100% { background-position: 100% 100%; }
+}
+
+.container {
+    background: rgba(42, 0, 58, 0.8);
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 0 30px var(--neon-purple), 0 0 60px var(--neon-red);
+    text-align: center;
+    max-width: 600px; /* Увеличена максимальная ширина контейнера */
+    width: 100%;
+    border: 2px solid var(--neon-purple);
+    position: relative;
+    overflow: hidden;
+    box-sizing: border-box; /* Ensure padding doesn't add to overall width */
+}
+
+.container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 0, 93, 0.2),
+        transparent
+    );
+    animation: containerShine 3s infinite linear;
+}
+
+@keyframes containerShine {
+    0% { left: -100%; }
+    100% { left: 100%; }
+}
+
+.game-title {
+    color: var(--neon-red);
+    font-size: 2.8em;
+    margin-bottom: 10px;
+    font-weight: bold;
+    text-shadow: 0 0 10px var(--neon-red), 0 0 20px var(--neon-purple);
+    animation: flicker 1.5s infinite alternate;
+}
+
+@keyframes flicker {
+    0%, 100% { opacity: 1; text-shadow: 0 0 10px var(--neon-red), 0 0 20px var(--neon-purple); }
+    50% { opacity: 0.8; text-shadow: 0 0 8px var(--neon-red), 0 0 15px var(--neon-purple); }
+}
+
+.game-subtitle {
+    color: var(--text-dark);
+    font-size: 1.2em;
+    margin-bottom: 40px;
+    text-shadow: 0 0 5px var(--deep-purple);
+}
+
+.buttons-container {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+}
+
+.btn {
+    padding: 20px 35px;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.2em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 160px;
+    flex: 1;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.2),
+        transparent
+    );
+    transition: left 0.5s;
+}
+
+.btn:hover::before {
+    left: 100%;
+}
+
+.btn-play {
+    background: linear-gradient(135deg, var(--deep-purple), var(--neon-purple));
+    color: var(--text-light);
+    box-shadow: 0 0 15px var(--neon-purple), 0 0 30px var(--neon-purple);
+    border: 1px solid var(--neon-purple);
+}
+
+.btn-ranking {
+    background: linear-gradient(135deg, var(--dark-red), var(--neon-red));
+    color: var(--text-light);
+    box-shadow: 0 0 15px var(--neon-red), 0 0 30px var(--neon-red);
+    border: 1px solid var(--neon-red);
+}
+
+.btn:hover {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 0 25px var(--neon-purple), 0 0 50px var(--neon-red);
+}
+
+.btn-shop {
+    background: linear-gradient(135deg, var(--dark-purple), var(--neon-purple));
+    color: var(--text-light);
+    box-shadow: 0 0 15px var(--neon-purple), 0 0 30px var(--neon-purple);
+    border: 1px solid var(--neon-purple);
+}
+
+.btn:active {
+    transform: translateY(-2px);
+}
+
+.high-score {
+    background: var(--deep-purple);
+    color: var(--text-light);
+    padding: 15px;
+    border-radius: 15px;
+    font-size: 1.1em; /* Reduced font size for the 'My Score' text */
+    font-weight: bold;
+    border: 2px solid var(--neon-red);
+    box-shadow: 0 0 15px var(--neon-red);
+    position: relative;
+    overflow: hidden;
+    max-width: 90%; /* Limit width for high score */
+    margin: 0 auto; /* Center it */
+}
+
+.high-score::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+        45deg,
+        transparent,
+        rgba(255, 255, 255, 0.1),
+        transparent
+    );
+    transform: rotate(45deg);
+    animation: scoreShine 3s infinite linear;
+}
+
+@keyframes scoreShine {
+    0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+    100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+}
+
+.score-number {
+    font-size: 2em; /* Further reduced font size for score numbers */
+    margin-top: 10px;
+    color: var(--accent-yellow);
+    text-shadow: 0 0 10px var(--accent-yellow), 0 0 20px var(--neon-red);
+    animation: neonGlow 1.5s infinite alternate;
+}
+
+@keyframes neonGlow {
+    0%, 100% { text-shadow: 0 0 10px var(--accent-yellow), 0 0 20px var(--neon-red); }
+    50% { text-shadow: 0 0 8px var(--accent-yellow), 0 0 15px var(--neon-red), 0 0 30px var(--neon-purple); }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 30px 20px;
+    }
+    
+    .game-title {
+        font-size: 2em;
+    }
+    
+    .buttons-container {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .btn {
+        min-width: auto;
+        padding: 18px 30px;
+    }
+    .high-score {
+        padding: 10px; /* Further adjust padding for smaller screens */
+    }
+    .score-number {
+        font-size: 1.4em; /* Even further adjusted font size for smaller screens */
+    }
+}
+
+.selected-role-display {
+    background: var(--deep-purple);
+    color: var(--text-light);
+    padding: 5px 8px; /* Сильнее уменьшаем горизонтальный padding */
+    border-radius: 15px;
+    font-size: 1.3em; /* Увеличенный размер шрифта */
+    font-weight: bold;
+    border: 2px solid var(--neon-purple);
+    box-shadow: 0 0 10px var(--neon-purple);
+    margin-top: 20px;
+    text-align: center;
+    max-width: 100%; /* Устанавливаем 100%, чтобы использовать всю доступную ширину */
+    min-width: 200px; /* Добавляем минимальную ширину */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.role-name {
+    font-size: 1em; /* Уменьшаем размер шрифта для лучшего размещения */
+    color: var(--accent-yellow);
+    text-shadow: 0 0 8px var(--accent-yellow);
+    margin-top: 5px;
+    word-break: break-word; /* Предотвращает обрезание длинных слов */
+    overflow-wrap: break-word; /* Дополнительное свойство для переноса слов */
+}
+
+/* Стили для ролей */
+.role-архимаг .selected-role-display {
+    background: var(--архимаг-bg-dark);
+    border-color: var(--архимаг-border);
+    box-shadow: 0 0 10px var(--архимаг-shadow), 0 0 20px var(--архимаг-shadow);
+}
+
+.role-архимаг .role-name {
+    color: var(--архимаг-text);
+    text-shadow: 0 0 8px var(--архимаг-text);
+}
+
+.role-провидец .selected-role-display {
+    background: var(--провидец-bg-dark);
+    border-color: var(--провидец-border);
+    box-shadow: 0 0 10px var(--провидец-shadow), 0 0 20px var(--провидец-shadow);
+}
+
+.role-провидец .role-name {
+    color: var(--провидец-text);
+    text-shadow: 0 0 8px var(--провидец-text);
+}
+
+.role-инженер .selected-role-display {
+    background: var(--инженер-bg-dark);
+    border-color: var(--инженер-border);
+    box-shadow: 0 0 10px var(--инженер-shadow), 0 0 20px var(--инженер-shadow);
+}
+
+.role-инженер .role-name {
+    color: var(--инженер-text);
+    text-shadow: 0 0 8px var(--инженер-text);
+}
+
+.role-монархтеней .selected-role-display {
+    background: var(--монархтеней-bg-dark);
+    border-color: var(--монархтеней-border);
+    box-shadow: 0 0 10px var(--монархтеней-shadow), 0 0 20px var(--монархтеней-shadow);
+    position: relative;
+    overflow: hidden;
+}
+
+.role-монархтеней .role-name {
+    color: var(--монархтеней-text);
+    text-shadow: 0 0 8px var(--монархтеней-text);
+    z-index: 1;
+    position: relative;
+}
+
+.role-монархтеней .selected-role-display::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(0,0,0,0.1) 0%, transparent 70%);
+    animation: shadowMist 5s infinite ease-in-out alternate;
+    z-index: 0;
+}
+
+@keyframes shadowMist {
+    0% { transform: scale(1) translateX(0) translateY(0); opacity: 0.5; }
+    100% { transform: scale(1.2) translateX(10px) translateY(-10px); opacity: 0.8; }
+}
+
+/* Анимации */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+    animation: fadeIn 0.8s ease-out;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.pulse {
+    animation: pulse 2s infinite;
+}
+
+@media (max-width: 480px) {
+    .selected-role-display {
+        font-size: 1em; /* Уменьшаем размер на мобильных */
+        padding: 5px; /* Уменьшаем padding на мобильных */
+        min-width: 150px; /* Добавляем минимальную ширину */
+    }
+    .role-name {
+        font-size: 0.7em; /* Еще сильнее уменьшаем размер на мобильных */
+    }
+}
+
+/* Styles for game.html components */
+.game_container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.score {
+    font-size: 2em;
+    color: var(--accent-yellow);
+    text-shadow: 0 0 10px var(--accent-yellow), 0 0 20px var(--neon-red);
+}
+
+#game-canvas {
+    border: 2px solid var(--neon-purple);
+    box-shadow: 0 0 15px var(--neon-purple), 0 0 30px var(--neon-red);
+    background-color: var(--dark-purple);
+    /* Удаляем фиксированные размеры и делаем их адаптивными */
+    max-width: min(90vw, 400px); /* Используем 90% ширины экрана, но не более 400px */
+    max-height: min(90vw, 400px); /* Высота соответствует ширине */
+    width: auto; /* Позволяем ширине быть автоматической */
+    height: auto; /* Позволяем высоте быть автоматической */
+}
+
+.block_container {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+    max-width: min(90vw, 400px); /* Ограничиваем ширину контейнера блоков, чтобы соответствовать канвасу */
+}
+
+.block {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    border: 2px solid var(--neon-purple);
+    background-color: transparent; /* Сделал фон прозрачным */
+    border-radius: 10px;
+    box-shadow: 0 0 10px var(--neon-purple);
+    transition: all 0.2s ease;
+    display: flex; /* Для центрирования внутренних ячеек */
+    justify-content: center; /* Центрирование по горизонтали */
+    align-items: center; /* Центрирование по вертикали */
+    cursor: grab;
+    position: relative; /* ВОТ ОНО! Добавил позиционирование */
+}
+
+.block.dragging {
+    opacity: 0.8;
+    transform: scale(1.1);
+    z-index: 1000;
+    cursor: grabbing;
+    box-shadow: 0 0 20px var(--neon-red), 0 0 40px var(--neon-purple);
+}
+
+.block:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0 15px var(--neon-red);
+}
+
+.block:active {
+    transform: scale(1.05);
+    transition: transform 0.1s;
+}
+
+.block > div { /* Стили для отдельных ячеек внутри блока */
+    /* Стили фона и рамки будут переопределены JS, оставляем только базовое */
+    /* border: 2px solid var(--text-dark); */ 
+    /* background-color: var(--accent-yellow); */
+    border-radius: 5px;
+}
+
+#restart-btn {
+    background: linear-gradient(135deg, var(--dark-red), var(--neon-red));
+    color: var(--text-light);
+    padding: 15px 30px;
+    font-size: 1.2em;
+    border-radius: 10px;
+    border: 1px solid var(--neon-red);
+    box-shadow: 0 0 15px var(--neon-red), 0 0 30px var(--neon-purple);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+#restart-btn:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 0 20px var(--neon-red), 0 0 40px var(--neon-purple);
+}
+
+#restart-btn:active {
+    transform: translateY(-1px);
+}
+
+/* Particle animation for line explosion */
+.particle {
+    position: absolute;
+    border-radius: 50%;
+    animation: explode 1.2s forwards;
+}
+
+@keyframes explode {
+    0% { transform: translate(0, 0) scale(1); opacity: 1; }
+    100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
+}
+
+@media (max-width: 768px) {
+    .block_container {
+        gap: 10px;
+    }
+    .block {
+        width: 120px; /* Adjust block size for smaller screens */
+        height: 120px;
+    }
+    .score {
+        font-size: 1.5em;
+    }
+    #restart-btn {
+        padding: 12px 25px;
+        font-size: 1em;
+    }
+    .block.dragging {
+        transform: scale(1.15) rotate(5deg);
+    }
+}
+/* Remove styles added dynamically by game.js if they are now in main.css */
+.hidden {
+    display: none !important;
+}
+
+.draggable-blocks-wrapper {
+    width: 100%; /* Занимает всю доступную ширину */
+    display: flex;
+    justify-content: center;
+}
+
+.game_container {
+    position: relative; /* Чтобы кнопка настроек позиционировалась относительно него */
+}
+
+#settings-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid var(--deep-purple);
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    color: var(--text-light);
+    z-index: 50; /* Поверх других элементов */
+}
+
+#settings-btn:hover {
+    background: var(--deep-purple);
+    transform: rotate(45deg) scale(1.1);
+    box-shadow: 0 0 15px var(--neon-purple);
+}
+
+#settings-btn img {
+    width: 20px;
+    height: 20px;
+}
+
+/* === Модальные стили (скопированы из modal.css и адаптированы) === */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal-content {
+    background: var(--dark-purple);
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 0 30px var(--neon-purple), 0 0 60px var(--neon-red);
+    text-align: center;
+    max-width: min(95vw, 400px); /* Адаптировано для игрового поля */
+    width: 95%;
+    max-height: 90vh;
+    overflow-y: auto;
+    border: 2px solid var(--neon-purple);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    transform: translateY(20px);
+    opacity: 0;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.modal-overlay.active .modal-content {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.modal-title {
+    color: var(--neon-red);
+    font-size: 2em;
+    margin-bottom: 5px;
+    text-shadow: 0 0 8px var(--neon-red), 0 0 15px var(--neon-purple);
+}
+
+.btn-close-settings-modal {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: none;
+    border: none;
+    color: var(--text-light);
+    font-size: 1.3em;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.btn-close-settings-modal:hover {
+    color: var(--neon-red);
+}
+
+.settings-option {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 80%;
+    max-width: 250px;
+    margin: 10px 0;
+    font-size: 1em;
+    color: var(--text-light);
+}
+
+/* The switch - the box around the slider */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 40px; /* Увеличен размер */
+    height: 24px; /* Увеличен размер */
+}
+
+/* Hide default HTML checkbox */
+.switch input { 
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/* The slider */
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--text-dark);
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 16px; /* Увеличен размер */
+    width: 16px; /* Увеличен размер */
+    left: 4px; /* Скорректировано положение */
+    bottom: 4px; /* Скорректировано положение */
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+input:checked + .slider {
+    background-color: var(--neon-red);
+}
+
+input:focus + .slider {
+    box-shadow: 0 0 1px var(--neon-red);
+}
+
+input:checked + .slider:before {
+    -webkit-transform: translateX(16px); /* Скорректировано смещение */
+    -ms-transform: translateX(16px);
+    transform: translateX(16px);
+}
+
+/* Rounded sliders */
+.slider.round {
+    border-radius: 24px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
+.btn-reload {
+    background: linear-gradient(135deg, var(--dark-red), var(--deep-red));
+    color: var(--text-light);
+    padding: 10px 20px;
+    font-size: 1em;
+    border-radius: 8px;
+    border: 1px solid var(--neon-red);
+    box-shadow: 0 0 10px var(--neon-red);
+    transition: all 0.3s ease;
+    margin-top: 15px;
+}
+
+.btn-reload:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 15px var(--neon-red), 0 0 30px var(--neon-purple);
+}
+
+/* Медиа-запросы для игрового модального окна */
+@media (max-width: 768px) {
+    #settings-btn {
+        width: 30px;
+        height: 30px;
+        font-size: 1em;
+        top: 8px;
+        right: 8px;
+    }
+    #settings-btn img {
+        width: 18px;
+        height: 18px;
+    }
+    .modal-content {
+        padding: 15px;
+        gap: 10px;
+    }
+    .modal-title {
+        font-size: 1.5em;
+    }
+    .btn-close-settings-modal {
+        font-size: 1.1em;
+        top: 5px;
+        right: 5px;
+    }
+    .settings-option {
+        width: 90%;
+        font-size: 0.9em;
+    }
+    .switch {
+        width: 35px;
+        height: 20px;
+    }
+    .slider:before {
+        height: 14px;
+        width: 14px;
+        left: 3px;
+        bottom: 3px;
+    }
+    input:checked + .slider:before {
+        -webkit-transform: translateX(15px);
+        -ms-transform: translateX(15px);
+        transform: translateX(15px);
+    }
+    .btn-reload {
+        padding: 8px 15px;
+        font-size: 0.9em;
+        margin-top: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    #settings-btn {
+        width: 28px;
+        height: 28px;
+        font-size: 0.9em;
+        top: 5px;
+        right: 5px;
+    }
+    #settings-btn img {
+        width: 16px;
+        height: 16px;
+    }
+    .modal-content {
+        padding: 10px;
+        gap: 8px;
+    }
+    .modal-title {
+        font-size: 1.2em;
+    }
+    .btn-close-settings-modal {
+        font-size: 1em;
+        top: 5px;
+        right: 5px;
+    }
+    .settings-option {
+        width: 95%;
+        font-size: 0.8em;
+    }
+    .switch {
+        width: 30px;
+        height: 18px;
+    }
+    .slider:before {
+        height: 12px;
+        width: 12px;
+        left: 3px;
+        bottom: 3px;
+    }
+    input:checked + .slider:before {
+        -webkit-transform: translateX(12px);
+        -ms-transform: translateX(12px);
+        transform: translateX(12px);
+    }
+    .btn-reload {
+        padding: 6px 12px;
+        font-size: 0.8em;
+        margin-top: 8px;
+    }
+}
