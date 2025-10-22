@@ -147,6 +147,7 @@ function canPlace(shape, startX, startY) {
     if (!shape || shape.length === 0 || !shape[0]) return false;
 
     for (let y = 0; y < shape.length; y++) {
+        if (!shape[y]) continue; // Пропускаем, если строка undefined
         for (let x = 0; x < shape[y].length; x++) {
             // Проверка на выход за границы сетки и на то, что shape[y] не undefined
             if (startY + y < 0 || startY + y >= GRID_SIZE || 
