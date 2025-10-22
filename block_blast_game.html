@@ -1,0 +1,170 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Block Blast Game</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: Arial, sans-serif; 
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .game-container {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+        }
+        h1 { color: #333; margin-bottom: 10px; }
+        .score { 
+            background: #4CAF50; 
+            color: white; 
+            padding: 15px; 
+            border-radius: 10px; 
+            margin: 20px 0;
+            font-size: 1.5em;
+        }
+        .game-board {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .block {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            color: white;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+        .block:hover { transform: scale(1.1); }
+        .red { background: linear-gradient(135deg, #ff6b6b, #c23616); }
+        .green { background: linear-gradient(135deg, #7bed9f, #2ed573); }
+        .blue { background: linear-gradient(135deg, #70a1ff, #1e90ff); }
+        .yellow { background: linear-gradient(135deg, #ffd700, #ffa502); }
+        .purple { background: linear-gradient(135deg, #cd84f1, #8c7ae6); }
+        button {
+            background: #4834d4;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.1em;
+            cursor: pointer;
+            margin: 10px;
+            transition: transform 0.2s;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            background: #686de0;
+        }
+        .instructions {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1>🎮 Block Blast</h1>
+        <p>Собирай блоки, набирай очки!</p>
+        
+        <div class="score">
+            Очки: <span id="score">0</span>
+        </div>
+        
+        <div class="game-board" id="gameBoard">
+            <!-- Блоки будут сгенерированы JavaScript -->
+        </div>
+        
+        <div>
+            <button onclick="startGame()">🔄 Новая игра</button>
+            <button onclick="endGame()">🏁 Завершить игру</button>
+        </div>
+        
+        <div class="instructions">
+            <h3>🎯 Как играть:</h3>
+            <p>• Нажимай на блоки одинакового цвета</p>
+            <p>• Собирай группы из 3+ блоков</p>
+            <p>• Чем больше блоков - тем больше очков!</p>
+            <p>• После игры вернись в Telegram</p>
+        </div>
+    </div>
+
+    <script>
+        let score = 0;
+        let colors = ['red', 'green', 'blue', 'yellow', 'purple'];
+        
+        function createGameBoard() {
+            const gameBoard = document.getElementById('gameBoard');
+            gameBoard.innerHTML = '';
+            
+            for (let i = 0; i < 25; i++) {
+                const randomColor = colors[Math.floor(Math.random() * colors.length)];
+                const block = document.createElement('div');
+                block.className = `block ${randomColor}`;
+                block.innerHTML = '●';
+                block.onclick = () => handleBlockClick(block, randomColor);
+                gameBoard.appendChild(block);
+            }
+        }
+        
+        function handleBlockClick(block, color) {
+            const points = Math.floor(Math.random() * 100) + 10;
+            score += points;
+            
+            // Визуальный эффект
+            block.style.transform = 'scale(1.2)';
+            block.style.background = 'linear-gradient(135deg, #ff9ff3, #f368e0)';
+            
+            setTimeout(() => {
+                const randomColor = colors[Math.floor(Math.random() * colors.length)];
+                block.className = `block ${randomColor}`;
+                block.style.transform = 'scale(1)';
+            }, 300);
+            
+            updateScore();
+        }
+        
+        function updateScore() {
+            document.getElementById('score').textContent = score;
+        }
+        
+        function startGame() {
+            score = 0;
+            updateScore();
+            createGameBoard();
+            alert('🎮 Игра началась! Собирай блоки и набирай очки!');
+        }
+        
+        function endGame() {
+            alert(`🎉 Игра завершена! Твой результат: ${score} очков!
+
+Вернись в Telegram и нажми "📊 Отправить результат"`);
+        }
+        
+        // Начинаем игру при загрузке
+        startGame();
+    </script>
+</body>
+</html>
+    
