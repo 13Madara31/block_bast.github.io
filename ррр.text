@@ -5,3 +5,15 @@
                 "@superiorplazer", "@GerBEE4", "@Curse9123", "@icemxn", "@Chert1la1",
                 "@kto_to_otkuda_to_zachemto", "@tfgkghn", "@polyashenka", "@DevilHeaven0",
                 "@Grut_as", "@kanapeas", "@sundrseil59", "@Fun_Dan3","@ame_libre_de_lartiste"
+
+
+
+
+
+     git remote add origin https://github.com/13Madara31/block_bast.github.io
+     git branch -M main
+     git push -u origin main
+
+
+     git remote add origin https://github.com/13Madara31/block_bast.github.io.git
+     git remote add origin https://github.com/13Madara31/block_bast.github.io.git

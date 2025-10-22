@@ -8,6 +8,7 @@ import random
 from datetime import datetime, timedelta
 from telebot.types import ReplyKeyboardMarkup, KeyboardButton
 from flask import Flask, request, jsonify
+from flask_cors import CORS # Импортируем CORS
 import threading
 
 # Настройка логирования
@@ -21,6 +22,7 @@ logging.basicConfig(
 bot = telebot.TeleBot(os.environ.get('TELEGRAM_BOT_TOKEN'))
 
 app = Flask(__name__) # Инициализация Flask приложения
+CORS(app) # Включаем CORS для всего приложения Flask
 
 # Списки
 ADMINS = [1192684448, 1455941147, 6824082367, 1647977664]
