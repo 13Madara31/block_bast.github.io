@@ -77,6 +77,7 @@ let score = 0;
 let currentBlocks = [];
 let ghostShape = null;
 let ghostX = 0, ghostY = 0;
+let telegramUsername = 'Игрок'; // Имя пользователя Telegram по умолчанию
 
 // Переменные для touch-событий
 let activeTouch = null;
@@ -196,7 +197,8 @@ function placeShape(shape, startX, startY) {
 
 // Обработка конца игры
 function handleGameOver() {
-    const playerName = 'Игрок'; // Имя игрока по умолчанию
+    // Используем telegramUsername, если доступно, иначе 'Игрок'
+    const playerName = telegramUsername; 
     saveGameScore(playerName, score);
     alert(`Игра окончена! Ваш финальный счет: ${score}. Рекорд сохранен под именем ${playerName}.`);
     // При окончании игры скрываем draggable-blocks-wrapper и показываем restart-btn
@@ -698,7 +700,24 @@ blocks.forEach(block => {
     }, { passive: false });
 });
 
+// Функция для инициализации Telegram WebApp и получения имени пользователя
+function initTelegramWebApp() {
+    if (window.Telegram && window.Telegram.WebApp) {
+        window.Telegram.WebApp.ready();
+        const user = window.Telegram.WebApp.initDataUnsafe.user;
+        if (user) {
+            telegramUsername = user.username || user.first_name || 'Игрок';
+            console.log(`Telegram User: ${telegramUsername}`);
+        } else {
+            console.log("Telegram user data not available.");
+        }
+    } else {
+        console.log("Not running as Telegram Web App.");
+    }
+}
+
 // Инициализация игры
+initTelegramWebApp(); // Инициализируем Telegram WebApp
 setCanvasSize(); // Устанавливаем размер канваса при старте
 generateSmartBlocks();
 draw();
