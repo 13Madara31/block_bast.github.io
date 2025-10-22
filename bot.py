@@ -28,6 +28,18 @@ CORS(app) # Включаем CORS для всего приложения Flask
 ADMINS = [1192684448, 1455941147, 6824082367, 1647977664]
 PROTECTED_USER = "@Madara1332"
 
+# НОВЫЙ СПИСОК ИЗВЕСТНЫХ ЮЗЕРНЕЙМОВ, которые бот будет пытаться упомянуть
+KNOWN_USERNAMES = [
+    "@Madara1332", "@icemxn", "@ivanNN4ik", "@polyashenka",
+    "@kanapeas", "@Hg2355644", "@Fun_Dan3", "@Krasavchikkkkkkkkkkkkkk",
+    "@sundrseil59", "@nestea_rem", "@Grut_as", "@GerBEE4", "@DevilHeaven0",
+    "@xenophonsshiva", "@Lolil_Angi", "@marriavoronina", "@luniluda", "@austinec1",
+    "@DAWKAODAWKA", "@Curse9123", "@anuytaaaa", "@krasavchikkkkkkkkk", "@Popluektov",
+    "@Barbs228", "@holejes", "@Zxcvbnm_111222", "@referalyan",
+    "@superiorplazer", "@ame_libre_de_lartiste", "@tmlk_07", "@tfgkghn","@sseeevgii",
+    "@Aleks_Chik","@AbaddonTaken","@Fort_KH","@mashhkb","@nikita_ket","@Blabyda16547","@Prostoktotto","@Chert1la1"
+]
+
 ANNOUNCEMENT_CHAT_ID = ADMINS[0] # По умолчанию, отправляем первому админу. Пожалуйста, замените на ID нужного чата/канала!
 
 # НАСТРОЙКА СИСТЕМЫ АНТИ-МАТА (по умолчанию ВЫКЛЮЧЕНА)
@@ -398,28 +410,48 @@ def mention_all_button(message):
     
     try:
         chat_id = message.chat.id
-        
-        mention_text = "🔔 *ВНИМАНИЕ! Упоминаются только администраторы и защищенный пользователь:*
+        mention_text = "🔔 *ВНИМАНИЕ! Следующие пользователи (администраторы, защищенный пользователь и известные username) были упомянуты:*
 \n"
         mention_text += f"📢 Объявление от @{message.from_user.username or message.from_user.first_name}\n"
         
-        # Добавляем упоминание PROTECTED_USER
-        mention_text += f"🌟 {PROTECTED_USER}\n"
+        # Добавляем упоминание PROTECTED_USER (если он не в общем списке)
+        if PROTECTED_USER not in KNOWN_USERNAMES:
+            mention_text += f"🌟 {PROTECTED_USER}\n"
         
         # Добавляем упоминание админов
         admin_mentions = []
         for admin_id in ADMINS:
             try:
                 member = bot.get_chat_member(chat_id, admin_id)
-                if member.user.username:
+                if member.user.username and f"@{member.user.username}" not in KNOWN_USERNAMES and f"@{member.user.username}" != PROTECTED_USER:
                     admin_mentions.append(f"👑 @{member.user.username}")
             except:
                 continue
         
         if admin_mentions:
             mention_text += "\n" + "\n".join(admin_mentions) + "\n"
+
+        # Добавляем упоминание всех из списка KNOWN_USERNAMES
+        user_mentions = []
+        for username_tag in KNOWN_USERNAMES:
+            # Проверяем, что это не PROTECTED_USER и не админ, чтобы избежать дублирования
+            is_admin_in_list = False
+            for admin_id in ADMINS:
+                try:
+                    member = bot.get_chat_member(chat_id, admin_id)
+                    if member.user.username and f"@{member.user.username}" == username_tag:
+                        is_admin_in_list = True
+                        break
+                except:
+                    pass
+            
+            if username_tag != PROTECTED_USER and not is_admin_in_list:
+                user_mentions.append(username_tag)
         
-        # Удалена строка с общим количеством участников, так как API не позволяет получить всех.
+        if user_mentions:
+            mention_text += "\n" + "\n".join(user_mentions) + "\n"
+
+        mention_text += "\n_Примечание: Бот может упоминать только пользователей с публичным username, которые видны боту, и может быть ограничен настройками конфиденциальности Telegram._\n"
         mention_text += f"\n⏰ Время: {datetime.now().strftime('%H:%M:%S')}"
         mention_text += f"\n\n🎮 *Кнопка нажата через меню!*"
         
