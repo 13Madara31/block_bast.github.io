@@ -106,7 +106,8 @@ def send_audio_message(chat_id, audio_type):
         if not os.path.exists(audio_file):
             logging.error(f"Аудиофайл не найден: {audio_file}")
             return False
-            
+
+         
         # Отправляем аудио как голосовое сообщение
         with open(audio_file, 'rb') as audio:
             if audio_type == 'puck':
@@ -397,11 +398,10 @@ def mention_all_button(message):
     
     try:
         chat_id = message.chat.id
-        members_count = bot.get_chat_members_count(chat_id)
         
-        mention_text = "🔔 *ВНИМАНИЕ ВСЕМ!*\n\n"
+        mention_text = "🔔 *ВНИМАНИЕ! Упоминаются только администраторы и защищенный пользователь:*
+\n"
         mention_text += f"📢 Объявление от @{message.from_user.username or message.from_user.first_name}\n"
-        mention_text += "👥 Участники чата:\n"
         
         # Добавляем упоминание PROTECTED_USER
         mention_text += f"🌟 {PROTECTED_USER}\n"
@@ -417,9 +417,9 @@ def mention_all_button(message):
                 continue
         
         if admin_mentions:
-            mention_text += "\n".join(admin_mentions) + "\n"
+            mention_text += "\n" + "\n".join(admin_mentions) + "\n"
         
-        mention_text += f"\n📊 Всего участников: {members_count}"
+        # Удалена строка с общим количеством участников, так как API не позволяет получить всех.
         mention_text += f"\n⏰ Время: {datetime.now().strftime('%H:%M:%S')}"
         mention_text += f"\n\n🎮 *Кнопка нажата через меню!*"
         
