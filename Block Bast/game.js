@@ -222,7 +222,7 @@ function saveGameScore(name, gameScore) {
 
 // Функция для отправки данных о новом рекорде на сервер Flask
 function sendHighScoreToServer(username, role, score) {
-    const serverUrl = 'http://localhost:5000/new_high_score'; // Адрес вашего Flask сервера
+    const serverUrl = 'https://block-blast-telegram-bot.onrender.com/new_high_score'; // Адрес вашего Flask сервера
     fetch(serverUrl, {
         method: 'POST',
         headers: {
