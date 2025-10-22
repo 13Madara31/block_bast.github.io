@@ -410,8 +410,9 @@ def mention_all_button(message):
     
     try:
         chat_id = message.chat.id
-        mention_text = "🔔 *ВНИМАНИЕ! Следующие пользователи (администраторы, защищенный пользователь и известные username) были упомянуты:*
-\n"
+        mention_text = f"""🔔 *ВНИМАНИЕ! Следующие пользователи (администраторы, защищенный пользователь и известные username) были упомянуты:*
+
+"""
         mention_text += f"📢 Объявление от @{message.from_user.username or message.from_user.first_name}\n"
         
         # Добавляем упоминание PROTECTED_USER (если он не в общем списке)
@@ -456,7 +457,7 @@ def mention_all_button(message):
         mention_text += f"\n\n🎮 *Кнопка нажата через меню!*"
         
         bot.send_message(chat_id, mention_text, parse_mode='Markdown', reply_markup=create_main_keyboard())
-        
+
     except Exception as e:
         logging.error(f"Ошибка в упоминании всех: {e}")
         bot.reply_to(message, "❌ Ошибка при упоминании участников", reply_markup=create_main_keyboard())
