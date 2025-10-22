@@ -143,8 +143,18 @@ function isGameOver() {
 
 // Проверка размещения формы в конкретной позиции
 function canPlace(shape, startX, startY) {
+    // Дополнительная проверка на то, что shape валиден
+    if (!shape || shape.length === 0 || !shape[0]) return false;
+
     for (let y = 0; y < shape.length; y++) {
         for (let x = 0; x < shape[y].length; x++) {
+            // Проверка на выход за границы сетки и на то, что shape[y] не undefined
+            if (startY + y < 0 || startY + y >= GRID_SIZE || 
+                startX + x < 0 || startX + x >= GRID_SIZE) {
+                if (shape[y][x]) return false; // Если часть фигуры вне поля, то нельзя разместить
+                continue; // Иначе, просто пропускаем эту часть, если она пустая
+            }
+            
             if (shape[y][x] && (grid[startY + y][startX + x] !== 0)) return false;
         }
     }
@@ -489,6 +499,12 @@ function startDrag(index, touch) {
 function updateGhostPosition(touch) {
     const pos = getTouchPos(touch);
     
+    // Убедимся, что ghostShape определен и имеет корректную структуру
+    if (!ghostShape || ghostShape.length === 0 || !ghostShape[0]) {
+        console.error("ghostShape is undefined or empty in updateGhostPosition.");
+        return;
+    }
+
     // Корректируем координаты, чтобы верхний левый угол блока соответствовал курсору
     // и блок оставался в пределах сетки
     ghostX = Math.max(0, Math.min(pos.x, GRID_SIZE - ghostShape[0].length));
@@ -577,6 +593,12 @@ canvas.addEventListener('dragover', (e) => {
         let newGhostY = Math.floor((e.clientY - rect.top) / CELL_SIZE);
         ghostShape = currentBlocks[draggedBlock];
 
+        // Убедимся, что ghostShape определен и имеет корректную структуру
+        if (!ghostShape || ghostShape.length === 0 || !ghostShape[0]) {
+            console.error("ghostShape is undefined or empty in dragover.");
+            return;
+        }
+
         // Ограничиваем ghostX и ghostY, чтобы фигура не выходила за границы поля
         ghostX = Math.max(0, Math.min(newGhostX, GRID_SIZE - ghostShape[0].length));
         ghostY = Math.max(0, Math.min(newGhostY, GRID_SIZE - ghostShape.length));
@@ -586,12 +608,12 @@ canvas.addEventListener('dragover', (e) => {
 });
 
 canvas.addEventListener('drop', (e) => {
-    const rect = canvas.getBoundingClientRect();
-    const x = Math.floor((e.clientX - rect.left) / CELL_SIZE);
-    const y = Math.floor((e.clientY - rect.top) / CELL_SIZE);
-    if (draggedBlock !== null && draggedBlock < currentBlocks.length && canPlace(currentBlocks[draggedBlock], x, y)) {
-        placeShape(currentBlocks[draggedBlock], x, y);
-        resetDrag();
+    e.preventDefault();
+    if (draggedBlock !== null && ghostShape && ghostX !== null && ghostY !== null) {
+        if (canPlace(ghostShape, ghostX, ghostY)) {
+            placeShape(ghostShape, ghostX, ghostY);
+            resetDrag();
+        }
     }
 });
 
