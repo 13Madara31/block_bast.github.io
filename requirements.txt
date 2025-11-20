@@ -2,4 +2,5 @@ pyTelegramBotAPI
 gTTS
 Flask
 Flask-Cors
+gunicorn
 

@@ -1135,11 +1135,9 @@ def main():
     """Основная функция запуска"""
     global ANTI_MAT_ENABLED
     
-    # Запускаем Flask приложение в отдельном потоке
-    flask_thread = threading.Thread(target=run_flask_app)
-    flask_thread.daemon = True # Поток завершится при завершении основной программы
-    flask_thread.start()
-    logging.info("Flask сервер запущен в отдельном потоке на http://0.0.0.0:5000")
+    # Запуск Flask сервера в отдельном потоке
+    # flask_thread = threading.Thread(target=run_flask_app)
+    # flask_thread.start()
 
     anti_mat_status = "🟢 ВКЛЮЧЕНА" if ANTI_MAT_ENABLED else "🔴 ВЫКЛЮЧЕНА"
     
