@@ -19,7 +19,7 @@ logging.basicConfig(
 )
 
 # Токен бота
-bot = telebot.TeleBot(os.environ.get('8344129387:AAHQjrahvx_Tnj7gaELmeNI1q1IjUl4eLhk'))
+bot = telebot.TeleBot(os.environ.get('TELEGRAM_BOT_TOKEN'))
 
 app = Flask(__name__) # Инициализация Flask приложения
 CORS(app) # Включаем CORS для всего приложения Flask
